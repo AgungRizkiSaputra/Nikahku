@@ -20,6 +20,18 @@ interface LayoutProps {
   guestName?: string;
 }
 
+function EditorialOrnament({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 200 60" fill="none" className={className} aria-hidden="true">
+      <path d="M0 30 Q50 0 100 30 Q150 60 200 30" stroke="currentColor" strokeWidth="0.8" opacity="0.3" />
+      <path d="M0 30 Q50 60 100 30 Q150 0 200 30" stroke="currentColor" strokeWidth="0.8" opacity="0.15" />
+      <circle cx="100" cy="30" r="3" fill="currentColor" opacity="0.25" />
+      <circle cx="60" cy="22" r="1.5" fill="currentColor" opacity="0.15" />
+      <circle cx="140" cy="38" r="1.5" fill="currentColor" opacity="0.15" />
+    </svg>
+  );
+}
+
 export default function EditorialLayout({ invitation, guestName }: LayoutProps) {
   const content = invitation.content;
   const [activePhoto, setActivePhoto] = useState<string | null>(null);
@@ -27,10 +39,47 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
   if (!content) return null;
 
   return (
-    <article className="min-h-screen bg-[#FBF9F5] text-[#1F1E1B] font-sans antialiased selection:bg-[#9E7D47] selection:text-white">
-      {/* 1. EDITORIAL HERO: Monumental Typography & Photographic Presence */}
-      <header className="pt-24 pb-20 px-6 sm:px-12 max-w-5xl mx-auto">
-        <div className="text-center space-y-4 mb-16">
+    <article className="min-h-screen bg-[#FBF9F5] text-[#1F1E1B] font-sans antialiased selection:bg-[#9E7D47] selection:text-white relative overflow-hidden">
+      {/* Animated floating golden particles */}
+      <style>{`
+        @keyframes editorial-float {
+          0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.12; }
+          50% { transform: translateY(-40px) rotate(8deg); opacity: 0.25; }
+        }
+        @keyframes editorial-drift {
+          0%, 100% { transform: translate(0, 0); }
+          33% { transform: translate(15px, -20px); }
+          66% { transform: translate(-10px, -10px); }
+        }
+        .editorial-particle { animation: editorial-float 8s ease-in-out infinite; }
+        .editorial-particle-2 { animation: editorial-float 12s ease-in-out 2s infinite; }
+        .editorial-particle-3 { animation: editorial-float 10s ease-in-out 4s infinite; }
+        .editorial-ornament-drift { animation: editorial-drift 20s ease-in-out infinite; }
+      `}</style>
+
+      {/* Decorative corner flourishes */}
+      <div className="fixed top-0 left-0 w-48 h-48 pointer-events-none z-0 opacity-[0.06]">
+        <svg viewBox="0 0 200 200" fill="none" className="w-full h-full text-[#9E7D47]">
+          <path d="M0 0 C40 0 80 20 100 60 C120 100 100 160 60 180 C40 190 20 180 10 160 C0 140 10 120 30 110 C50 100 60 120 50 140" stroke="currentColor" strokeWidth="1.5" />
+          <circle cx="50" cy="50" r="20" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
+        </svg>
+      </div>
+      <div className="fixed bottom-0 right-0 w-48 h-48 pointer-events-none z-0 opacity-[0.06] rotate-180">
+        <svg viewBox="0 0 200 200" fill="none" className="w-full h-full text-[#9E7D47]">
+          <path d="M0 0 C40 0 80 20 100 60 C120 100 100 160 60 180 C40 190 20 180 10 160 C0 140 10 120 30 110 C50 100 60 120 50 140" stroke="currentColor" strokeWidth="1.5" />
+          <circle cx="50" cy="50" r="20" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
+        </svg>
+      </div>
+
+      {/* Floating golden dots */}
+      <div className="editorial-particle fixed top-[15%] left-[10%] w-2 h-2 rounded-full bg-[#9E7D47] pointer-events-none z-0" />
+      <div className="editorial-particle-2 fixed top-[40%] right-[8%] w-3 h-3 rounded-full bg-[#9E7D47] pointer-events-none z-0" />
+      <div className="editorial-particle-3 fixed top-[70%] left-[20%] w-1.5 h-1.5 rounded-full bg-[#9E7D47] pointer-events-none z-0" />
+      <div className="editorial-particle fixed bottom-[20%] right-[15%] w-2.5 h-2.5 rounded-full bg-[#9E7D47] pointer-events-none z-0" style={{ animationDelay: '3s' }} />
+
+      {/* 1. EDITORIAL HERO */}
+      <header className="pt-24 pb-20 px-6 sm:px-12 max-w-5xl mx-auto relative z-10">
+        <div className="text-center space-y-4 mb-10">
           <p className="text-xs uppercase tracking-[0.3em] text-[#9E7D47] font-medium">
             The Wedding Celebration
           </p>
@@ -50,19 +99,12 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
           </p>
         </div>
 
-        {/* Hero Photographic Feature */}
-        <div className="relative aspect-[16/10] overflow-hidden bg-stone-200 shadow-sm mb-12">
-          <img
-            src={
-              content.groom_photo ||
-              'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&auto=format&fit=crop&q=80'
-            }
-            alt="Mempelai"
-            className="w-full h-full object-cover"
-          />
+        {/* Elegant ornamental divider */}
+        <div className="editorial-ornament-drift max-w-xs mx-auto mb-10">
+          <EditorialOrnament className="w-full h-auto text-[#9E7D47]" />
         </div>
 
-        {/* Intimate Quote Banner */}
+        {/* Quote */}
         {content.quote && (
           <div className="max-w-2xl mx-auto text-center space-y-3 py-6">
             <Quote className="w-5 h-5 text-[#9E7D47] mx-auto opacity-70" />
@@ -84,8 +126,8 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
         )}
       </header>
 
-      {/* 2. THE COUPLE: Editorial Double Portrait */}
-      <section className="py-24 px-6 sm:px-12 max-w-5xl mx-auto">
+      {/* 2. THE COUPLE */}
+      <section className="py-24 px-6 sm:px-12 max-w-5xl mx-auto relative z-10">
         <div className="text-center mb-16 space-y-2">
           <p className="text-xs uppercase tracking-[0.25em] text-[#9E7D47] font-medium">
             The Couple
@@ -99,7 +141,6 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16">
-          {/* Groom */}
           <div className="space-y-6 text-center">
             <div className="aspect-[3/4] max-w-sm mx-auto overflow-hidden bg-stone-200 shadow-sm">
               <img
@@ -133,7 +174,6 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
             </div>
           </div>
 
-          {/* Bride */}
           <div className="space-y-6 text-center">
             <div className="aspect-[3/4] max-w-sm mx-auto overflow-hidden bg-stone-200 shadow-sm">
               <img
@@ -169,9 +209,9 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
         </div>
       </section>
 
-      {/* 3. EVENT SCHEDULE: Clean Editorial Typography */}
+      {/* 3. EVENT SCHEDULE */}
       {content.events && content.events.length > 0 && (
-        <section className="py-24 px-6 sm:px-12 max-w-5xl mx-auto bg-[#F4EFEA]/60">
+        <section className="py-24 px-6 sm:px-12 max-w-5xl mx-auto bg-[#F4EFEA]/60 relative z-10">
           <div className="text-center mb-16 space-y-2">
             <p className="text-xs uppercase tracking-[0.25em] text-[#9E7D47] font-medium">
               Celebration
@@ -191,7 +231,6 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
                   <span className="text-xs uppercase tracking-widest text-[#9E7D47] font-semibold block">
                     {ev.title}
                   </span>
-
                   <div className="space-y-2 text-stone-800">
                     <div className="flex items-center gap-2 text-sm font-serif font-bold text-[#141311]">
                       <Calendar className="w-4 h-4 text-[#9E7D47]" />
@@ -204,14 +243,12 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
                         })}
                       </span>
                     </div>
-
                     <div className="flex items-center gap-2 text-xs text-stone-600 font-serif">
                       <Clock className="w-4 h-4 text-[#9E7D47]" />
                       <span>
                         {ev.startTime} — {ev.endTime || 'Selesai'} {ev.timezone || 'WIB'}
                       </span>
                     </div>
-
                     <div className="pt-3 space-y-1">
                       <div className="flex items-start gap-2 text-xs text-stone-700">
                         <MapPin className="w-4 h-4 text-[#9E7D47] shrink-0 mt-0.5" />
@@ -221,7 +258,6 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
                         </div>
                       </div>
                     </div>
-
                     {ev.notes && (
                       <p className="text-xs text-[#9E7D47] italic pt-2 font-serif">
                         * {ev.notes}
@@ -229,7 +265,6 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
                     )}
                   </div>
                 </div>
-
                 {ev.mapsUrl && (
                   <div className="pt-4">
                     <a
@@ -249,28 +284,19 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
         </section>
       )}
 
-      {/* 4. LOVE STORY: Chronological Essay */}
+      {/* 4. LOVE STORY */}
       {content.love_stories && content.love_stories.length > 0 && (
-        <section className="py-24 px-6 sm:px-12 max-w-3xl mx-auto">
+        <section className="py-24 px-6 sm:px-12 max-w-3xl mx-auto relative z-10">
           <div className="text-center mb-16 space-y-2">
-            <p className="text-xs uppercase tracking-[0.25em] text-[#9E7D47] font-medium">
-              Our Journey
-            </p>
-            <h2 className="text-4xl sm:text-5xl font-bodoni font-normal text-[#141311]">
-              Untaian Kisah Kasih
-            </h2>
+            <p className="text-xs uppercase tracking-[0.25em] text-[#9E7D47] font-medium">Our Journey</p>
+            <h2 className="text-4xl sm:text-5xl font-bodoni font-normal text-[#141311]">Untaian Kisah Kasih</h2>
           </div>
-
           <div className="space-y-12">
             {content.love_stories.map((st, idx) => (
               <div key={st.id || idx} className="space-y-3">
                 <div className="flex items-baseline gap-4">
-                  <span className="text-2xl font-bodoni text-[#9E7D47] font-normal">
-                    {st.year}
-                  </span>
-                  <h3 className="text-xl font-bodoni font-bold text-[#141311]">
-                    {st.title}
-                  </h3>
+                  <span className="text-2xl font-bodoni text-[#9E7D47] font-normal">{st.year}</span>
+                  <h3 className="text-xl font-bodoni font-bold text-[#141311]">{st.title}</h3>
                 </div>
                 <p className="font-serif text-sm sm:text-base text-stone-700 leading-relaxed italic pl-10">
                   &ldquo;{st.story}&rdquo;
@@ -281,18 +307,13 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
         </section>
       )}
 
-      {/* 5. PHOTO GALLERY: Curated Photo Spread */}
+      {/* 5. PHOTO GALLERY */}
       {invitation.gallery && invitation.gallery.length > 0 && (
-        <section className="py-24 px-6 sm:px-12 max-w-6xl mx-auto">
+        <section className="py-24 px-6 sm:px-12 max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16 space-y-2">
-            <p className="text-xs uppercase tracking-[0.25em] text-[#9E7D47] font-medium">
-              Memories
-            </p>
-            <h2 className="text-4xl sm:text-5xl font-bodoni font-normal text-[#141311]">
-              Galeri Kenangan
-            </h2>
+            <p className="text-xs uppercase tracking-[0.25em] text-[#9E7D47] font-medium">Memories</p>
+            <h2 className="text-4xl sm:text-5xl font-bodoni font-normal text-[#141311]">Galeri Kenangan</h2>
           </div>
-
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {invitation.gallery.map((img, idx) => (
               <div
@@ -308,45 +329,33 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
               </div>
             ))}
           </div>
-
           {activePhoto && (
             <div
               className="fixed inset-0 z-50 bg-[#141311]/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-pointer"
               onClick={() => setActivePhoto(null)}
             >
               <div className="max-w-4xl max-h-[90vh] overflow-hidden p-2 bg-[#FBF9F5]">
-                <img
-                  src={activePhoto}
-                  alt="Enlarged"
-                  className="w-full h-auto max-h-[85vh] object-contain"
-                />
+                <img src={activePhoto} alt="Enlarged" className="w-full h-auto max-h-[85vh] object-contain" />
               </div>
             </div>
           )}
         </section>
       )}
 
-      {/* 6. WEDDING GIFT SECTION */}
+      {/* 6. WEDDING GIFT */}
       {content.bank_accounts && content.bank_accounts.length > 0 && (
-        <section className="py-24 px-6 sm:px-12 max-w-3xl mx-auto">
-          <GiftSection
-            bankAccounts={content.bank_accounts}
-            themeStyle="editorial"
-          />
+        <section className="py-24 px-6 sm:px-12 max-w-3xl mx-auto relative z-10">
+          <GiftSection bankAccounts={content.bank_accounts} themeStyle="editorial" />
         </section>
       )}
 
-      {/* 7. RSVP FORM */}
-      <section className="py-24 px-6 sm:px-12 max-w-2xl mx-auto bg-[#F4EFEA]/60">
-        <RsvpSection
-          invitationId={invitation.id}
-          initialGuestName={guestName}
-          themeStyle="editorial"
-        />
+      {/* 7. RSVP */}
+      <section className="py-24 px-6 sm:px-12 max-w-2xl mx-auto bg-[#F4EFEA]/60 relative z-10">
+        <RsvpSection invitationId={invitation.id} initialGuestName={guestName} themeStyle="editorial" />
       </section>
 
-      {/* 8. WISHES WALL */}
-      <section className="py-24 px-6 sm:px-12 max-w-3xl mx-auto">
+      {/* 8. WISHES */}
+      <section className="py-24 px-6 sm:px-12 max-w-3xl mx-auto relative z-10">
         <WishesSection
           invitationId={invitation.id}
           wishes={invitation.wishes || []}
@@ -355,8 +364,9 @@ export default function EditorialLayout({ invitation, guestName }: LayoutProps) 
         />
       </section>
 
-      {/* 9. EDITORIAL FOOTER */}
-      <footer className="py-20 px-6 text-center text-stone-500 font-serif text-xs space-y-2">
+      {/* 9. FOOTER */}
+      <footer className="py-20 px-6 text-center text-stone-500 font-serif text-xs space-y-2 relative z-10">
+        <EditorialOrnament className="w-32 h-auto text-[#9E7D47] mx-auto mb-4" />
         <p className="text-xl font-bodoni text-[#141311]">
           {content.groom_nickname} &amp; {content.bride_nickname}
         </p>
